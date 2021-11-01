@@ -1,5 +1,6 @@
 package com.example.fechingthedata.recycle
 
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,7 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.fechingthedata.R
 import com.example.fechingthedata.resources.DataX
-
+//it will be able to down grade
 class CustomAdapter(val list : List<DataX>?
 ): RecyclerView.Adapter<CustomAdapter.CustomViewHolder>() {
 
@@ -22,15 +23,13 @@ class CustomAdapter(val list : List<DataX>?
     }
 
     override fun onBindViewHolder(holder: CustomViewHolder, position: Int) {
-      val text = holder.itemView.findViewById<TextView>(R.id.truckName)
+        val text = holder.itemView.findViewById<TextView>(R.id.truckName)
 
         //set the truck name
         text.text = list?.get(position)?.truckNumber
         val state = holder.itemView.findViewById<TextView>(R.id.state)
         val speed = holder.itemView.findViewById<TextView>(R.id.speed)
         val updated = holder.itemView.findViewById<TextView>(R.id.lastUpdated)
-
-
 
 
         //here lot of computation is to be done to show the items on the list
@@ -82,12 +81,7 @@ class CustomAdapter(val list : List<DataX>?
             speed.text = ""
         }
 
-
-
-
         updated.text = "${res1} ago"
-
-
 
 
     }
@@ -111,7 +105,5 @@ class CustomAdapter(val list : List<DataX>?
             return 0
         else
             return list.size
-
-
     }
 }
