@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
 
 android {
@@ -14,6 +15,7 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
     }
 
     buildTypes {
@@ -47,14 +49,14 @@ dependencies {
         force = true
     }
     implementation "com.squareup.okhttp3:logging-interceptor:3.12.8"
-
     //for co-routine
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0'
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1"
-
     //retrofit dependency
     implementation 'com.squareup.retrofit2:retrofit:2.7.1'
     //Gson for parsing the data
     implementation 'com.squareup.retrofit2:converter-gson:2.1.0'
+    //adding dependency for google maps
+    implementation 'com.google.android.gms:play-services-maps:18.0.0'
 
 }
