@@ -11,4 +11,11 @@
     app:actionViewClass="androidx.appcompat.widget.SearchView"
     />
 
+    <item
+        android:id="@+id/toggle"
+        android:icon="@drawable/ic_list"
+        android:title="toggle"
+        app:showAsAction="always"
+        />
+
 </menu>
