@@ -39,9 +39,9 @@ class CustomAdapter(val list : List<DataX>?
         var s :Int? = null
 
         if (list != null) {
-            stopStartTime =    list[position].lastRunningState.stopStartTime
-            createTime    =    list[position].lastWaypoint.createTime
-            updateTime    =    list[position].lastWaypoint.updateTime
+            stopStartTime = list[position].lastRunningState.stopStartTime
+            createTime = list[position].lastWaypoint.createTime
+            updateTime = list[position].lastWaypoint.updateTime
             s = list[position].lastRunningState.truckRunningState
         }
         val  totalTimeRuning  =  claculateTime(stopStartTime,updateTime)
@@ -86,7 +86,7 @@ class CustomAdapter(val list : List<DataX>?
 
     }
 
-    private fun timeValue(days: Long, hrs: Long, min: Long): String? {
+    private fun timeValue(days: Long, hrs: Long, min: Long): String {
         if(days>0)
            return "${days} days"
         else if(hrs>0)
