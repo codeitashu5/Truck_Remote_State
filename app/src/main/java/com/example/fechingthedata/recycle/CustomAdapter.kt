@@ -86,8 +86,7 @@ class CustomAdapter(val list : List<DataX>?
 
         val card = holder.itemView.findViewById<CardView>(R.id.cardView)
 
-        if((lastUpdate/(60*60)>=4))
-        {
+        if((lastUpdate/(60*60)>=4)) {
           card.setBackgroundColor(Color.parseColor("#68FF0000"))
         }
         else{
