@@ -21,14 +21,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.fechingthedata.recycle.CustomAdapter
 import com.example.fechingthedata.resources.ApiInterface
 import com.example.fechingthedata.resources.DataX
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.MapView
-import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
@@ -43,25 +41,26 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var displayList: MutableList<DataX>
-    private lateinit var permanent: MutableList<DataX>
     private lateinit var mapView: MapView
     var list: List<DataX>? = null
 
     //to know in what state the app is currently is
     private var isMap = true
-
+    var zoomVlaue = 1f
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        //initilize the api
 
-        //geting a reference of map view
+
+        //get a reference of map view
         mapView = findViewById(R.id.map_view)
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
 
-        //geting the data from the api to get the required list of data
+        //get the data from the api to get the required list of data
         runBlocking {
             async {
                 list = getData()
@@ -70,16 +69,15 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         //the list section to be used to store and display truck based on search
         displayList = mutableListOf()
-        permanent = mutableListOf()
         displayList.addAll(list!!)
-        permanent.addAll(list!!)
 
-        recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
+
+        recyclerView = findViewById(R.id.recyclerView)
         recyclerView.adapter = CustomAdapter(displayList)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
 
-        //initial state of the activity
+        //initial state of the activity we have the map visible and the list is GONE
         recyclerView.visibility = View.GONE
         mapView.visibility = View.VISIBLE
 
@@ -92,7 +90,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-
         val api = retrofit.create(ApiInterface::class.java)
         var list: List<DataX>? = null
 
@@ -102,7 +99,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 val res = api.getData()
                 list = res?.body()?.data
             }
-        } catch (e: Exception) {
+        }
+        catch (e: Exception) {
             Toast.makeText(this, "not rendered", Toast.LENGTH_SHORT).show()
         }
         return list
@@ -119,16 +117,15 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         //making the function call to get the required result
         searchView.setOnQueryTextListener(
             object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(p0: String?): Boolean {
+                override fun onQueryTextSubmit(newString: String?): Boolean {
                     return true
                 }
-
                 override fun onQueryTextChange(newText: String?): Boolean {
                     if (newText != null && newText.length != 0) {
                         displayList.clear()
                         var search = newText.toLowerCase()
 
-                        for (i in permanent) {
+                        for (i in list!!) {
                             if (i.truckNumber.toLowerCase().contains(search)) {
                                 displayList.add(i)
                             }
@@ -138,7 +135,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                         }
                     } else {
                         displayList.clear()
-                        displayList.addAll(permanent)
+                        displayList.addAll(list!!)
                         recyclerView.adapter?.notifyDataSetChanged()
                     }
 
@@ -149,13 +146,24 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         )
 
         return super.onCreateOptionsMenu(menu)
-
-
     }
 
 
-
+// when the map get ready this function gets called so that we can use the map object to work on the stuff
     override fun onMapReady(googleMap: GoogleMap) {
+
+
+        val map = googleMap
+        //enabling the required settings
+       val zoomBtn = findViewById<FloatingActionButton>(R.id.floatingActionButton)
+
+       zoomBtn.setOnClickListener {
+           zoomVlaue = map.cameraPosition.zoom + 1f
+           map.animateCamera(CameraUpdateFactory.zoomTo(zoomVlaue), 1000, null)
+
+       }
+
+
         for (i in list!!) {
             val location = LatLng(i.lastWaypoint.lat, i.lastWaypoint.lng)
             //if the truck is not updated for more than 4 hours than the display red
@@ -191,6 +199,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         }
 
+
     }
 
     //if we want to use vector we have to use BitmapDescripterFactor
@@ -209,6 +218,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
+
+  //life cycle methods are override for the map to function correctly
     override fun onStart() {
         mapView.onStart()
         super.onStart()
@@ -246,7 +257,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
         when(item.itemId){
             R.id.toggle->{
                 if(isMap){
@@ -261,11 +271,14 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                     item.icon = ContextCompat.getDrawable(this,R.drawable.ic_list)
                     isMap = true
                 }
-
+                return true
             }
-        }
 
-        return super.onOptionsItemSelected(item)
+           else ->{
+               return super.onOptionsItemSelected(item)
+           }
+        }
     }
+
 
 }
