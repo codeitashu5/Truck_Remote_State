@@ -152,18 +152,15 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 // when the map get ready this function gets called so that we can use the map object to work on the stuff
     override fun onMapReady(googleMap: GoogleMap) {
 
-
-        val map = googleMap
-        //enabling the required settings
+       val map = googleMap
+      //using the floating action button to zoom in
        val zoomBtn = findViewById<FloatingActionButton>(R.id.floatingActionButton)
-
        zoomBtn.setOnClickListener {
            zoomVlaue = map.cameraPosition.zoom + 1f
            map.animateCamera(CameraUpdateFactory.zoomTo(zoomVlaue), 1000, null)
-
        }
 
-
+        //placing the markers according to the needs
         for (i in list!!) {
             val location = LatLng(i.lastWaypoint.lat, i.lastWaypoint.lng)
             //if the truck is not updated for more than 4 hours than the display red
@@ -255,7 +252,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onLowMemory()
         mapView.onLowMemory()
     }
-
+    // implementing on click feature for the toggle btn
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             R.id.toggle->{
@@ -279,6 +276,4 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
            }
         }
     }
-
-
 }

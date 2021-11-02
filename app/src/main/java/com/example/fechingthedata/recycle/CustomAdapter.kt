@@ -1,10 +1,16 @@
 package com.example.fechingthedata.recycle
 
+import android.content.Context
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getColor
+import androidx.core.content.ContextCompat.getDrawable
 import androidx.recyclerview.widget.RecyclerView
 import com.example.fechingthedata.R
 import com.example.fechingthedata.resources.DataX
@@ -66,11 +72,6 @@ class CustomAdapter(val list : List<DataX>?
         res = timeValue(days,hrs,min)
         res1 = timeValue(days1,hrs1,min1)
 
-
-
-
-        var k = 0
-
         if(s == 1){
             state.text = "Running since last ${res}"
             speed.text = list?.get(position)?.lastWaypoint?.speed.toString() + " k/h"
@@ -83,6 +84,15 @@ class CustomAdapter(val list : List<DataX>?
 
         updated.text = "${res1} ago"
 
+        val card = holder.itemView.findViewById<CardView>(R.id.cardView)
+
+        if((lastUpdate/(60*60)>=4))
+        {
+          card.setBackgroundColor(Color.parseColor("#68FF0000"))
+        }
+        else{
+            card.setBackgroundColor(Color.WHITE)
+        }
 
     }
 

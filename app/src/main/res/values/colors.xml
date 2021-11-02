@@ -10,4 +10,5 @@
     <color name ="red">#D60101</color>
     <color name ="temp">#00A816</color>
     <color name="btn">#003EA8</color>
+    <color name="frame">#68FF0000</color>
 </resources>
